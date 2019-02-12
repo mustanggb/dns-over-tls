@@ -5,6 +5,9 @@ stages:
 - test
 - release
 
+variables:
+  DOCKER_HOST: tcp://docker:2375
+
 before_script:
   - export SHORT_COMMIT_TAG=${CI_COMMIT_SHA:0:8}
   - export TEST_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:${CI_COMMIT_SHA:0:8}
