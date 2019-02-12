@@ -1,0 +1,35 @@
+image: docker:18.09
+
+stages:
+- build
+- test
+- release
+
+before_script:
+  - export SHORT_COMMIT_TAG=${CI_COMMIT_SHA:0:8}
+  - export TEST_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:${CI_COMMIT_SHA:0:8}
+  - export RELEASE_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:latest
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+test_image:
+  stage: build
+  script:
+    - docker build --pull -t $TEST_IMAGE_TAG .
+    - docker push $TEST_IMAGE_TAG
+    - docker rmi $TEST_IMAGE_TAG
+
+run_test:
+  stage: test
+  script:
+    - docker pull $TEST_IMAGE_TAG
+    - docker rmi $TEST_IMAGE_TAG
+
+release_image:
+  stage: release
+  script:
+    - docker pull $TEST_IMAGE_TAG
+    - docker tag $TEST_IMAGE_TAG $RELEASE_IMAGE_TAG
+    - docker push $RELEASE_IMAGE_TAG
+    - docker rmi $TEST_IMAGE_TAG $RELEASE_IMAGE_TAG
+  only:
+    - master
