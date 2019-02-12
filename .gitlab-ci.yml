@@ -1,9 +1,12 @@
 image: docker:18.09
 
+services:
+  - docker:dind
+
 stages:
-- build
-- test
-- release
+  - build
+  - test
+  - release
 
 variables:
   DOCKER_HOST: tcp://docker:2375
