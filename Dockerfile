@@ -38,6 +38,7 @@ RUN apk del git m4 libtool autoconf automake make g++ openssl-dev unbound-dev ch
 # Install runtime dependencies
 RUN apk add yaml libbsd unbound
 
+# Use multi-stage build to compress layers for a smaller image
 FROM scratch
 COPY --from=stubby / /
 CMD /bin/sh
