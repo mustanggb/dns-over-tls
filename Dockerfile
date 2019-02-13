@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.9 AS stubby
 
 ARG getdns_tag=v1.5.1
 ARG stubby_tag=v0.2.5
@@ -38,4 +38,6 @@ RUN apk del git m4 libtool autoconf automake make g++ openssl-dev unbound-dev ch
 # Install runtime dependencies
 RUN apk add yaml libbsd unbound
 
+FROM scratch
+COPY --from=stubby / /
 CMD /bin/sh
