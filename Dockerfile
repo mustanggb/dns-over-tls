@@ -3,7 +3,7 @@ FROM alpine:3.9
 ARG getdns_tag=v1.5.1
 ARG stubby_tag=v0.2.5
 
-# Install dependencies
+# Install build dependencies
 RUN apk add git m4 libtool autoconf automake make g++ openssl-dev unbound-dev check-dev libbsd-dev yaml-dev doxygen
 
 # Install getdns
@@ -31,5 +31,11 @@ RUN git clone https://github.com/getdnsapi/stubby.git && \
     make install && \
     cd / && \
     rm -R stubby
+
+# Uninstall build dependencies
+RUN apk del git m4 libtool autoconf automake make g++ openssl-dev unbound-dev check-dev libbsd-dev yaml-dev doxygen
+
+# Install runtime dependencies
+RUN apk add yaml libbsd unbound
 
 CMD /bin/sh
