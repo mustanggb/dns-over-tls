@@ -9,7 +9,6 @@ stages:
   - release
 
 before_script:
-  - export DOCKER_HOST=tcp://docker:2375
   - export TEST_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:${CI_COMMIT_SHA:0:8}
   - export RELEASE_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:latest
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
