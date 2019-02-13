@@ -8,11 +8,8 @@ stages:
   - test
   - release
 
-variables:
-  DOCKER_HOST: tcp://docker:2375
-  SHORT_COMMIT_TAG: ${CI_COMMIT_SHA:0:8}
-
 before_script:
+  - export DOCKER_HOST=tcp://docker:2375
   - export TEST_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:${CI_COMMIT_SHA:0:8}
   - export RELEASE_IMAGE_TAG=$DOCKER_USERNAME/$DOCKER_REPOSITORY:latest
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -20,7 +17,6 @@ before_script:
 test_image:
   stage: build
   script:
-    - echo $SHORT_COMMIT_TAG
     - docker build --pull -t $TEST_IMAGE_TAG .
     - docker push $TEST_IMAGE_TAG
     - docker rmi $TEST_IMAGE_TAG
